@@ -284,7 +284,25 @@ var HouseTypes = {
 };
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+var filtersContainer = map.querySelector('.map__filters-container');
+// map.classList.remove('map--faded');
+
+var form = document.querySelector('.ad-form');
+var toggleForm = function(isDisabled){
+  var fieldsets = form.querySelectorAll('fieldset');
+  for (var i = 0; i  < fieldsets.length; i++) {
+    var fieldset = fieldsets[i];
+    fieldset.disabled = isDisabled;
+
+    var inputs = fieldset.querySelectorAll('input');
+    for (var k = 0; k  < inputs.length; k++) {
+      var input = inputs[k];
+      input.disabled = isDisabled;
+    }
+  }
+};
+
+toggleForm(true);
 
 var renderPin = function (obj) {
   var template = document.querySelector('#pin');
@@ -320,7 +338,10 @@ var renderCard = function (obj) {
   type.textContent = HouseTypes[obj.offer.type];
 
   var capacity = card.querySelector('.popup__text--capacity');
-  capacity.textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + 'гостей';
+  capacity.textContent = obj.offer.rooms + ' комнаты для ' + obj.offer.guests + ' гостей';
+
+  var time = card.querySelector('.popup__text--time');
+  time.textContent = 'Заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
 
   var features = card.querySelector('.popup__features');
   features.innerHTML = '';
@@ -331,6 +352,20 @@ var renderCard = function (obj) {
     item.classList.add('popup__feature--' + feature);
     features.appendChild(item);
   }
+
+  var description = card.querySelector('.popup__description');
+  description.textContent = obj.offer.description;
+
+  var photosWrapper = card.querySelector('.popup__photos');
+  var photo = photosWrapper.querySelector('.popup__photo');
+  photosWrapper.innerHTML = '';
+  for (var i = 0; i < obj.offer.photos.length; i++) {
+    var photoSrc = obj.offer.photos[i];
+    var imgCopy = photo.cloneNode();
+    imgCopy.src = photoSrc;
+    photosWrapper.appendChild(imgCopy);
+  }
+
   return card;
 };
 
@@ -340,14 +375,26 @@ var generatePins = function (data) {
   for (var i = 0; i < data.length; i++) {
     var obj = data[i];
     var pin = renderPin(obj);
-    var card = renderCard(obj);
     fragment.appendChild(pin);
-    fragment.appendChild(card);
   }
 
   map.appendChild(fragment);
 };
 
+var generateCards = function (data) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < data.length; i++) {
+    var obj = data[i];
+    var card = renderCard(obj);
+    fragment.appendChild(card);
+  }
+
+  map.insertBefore(fragment, filtersContainer);
+};
+
 var data = getData();
 generatePins(data);
+generateCards(data);
+
 
