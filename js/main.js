@@ -285,7 +285,7 @@ var HouseTypes = {
 
 var map = document.querySelector('.map');
 var filtersContainer = map.querySelector('.map__filters-container');
-// map.classList.remove('map--faded');
+
 
 var form = document.querySelector('.ad-form');
 var toggleForm = function(isDisabled){
@@ -303,6 +303,28 @@ var toggleForm = function(isDisabled){
 };
 
 toggleForm(true);
+
+// обработчик события
+
+var mainPin = map.querySelector('.map__pin--main');
+var ENTER_KEY_CODE = 13;
+
+var onPinMousedown = function(){
+  map.classList.remove('map--faded');
+  toggleForm(false);
+};
+
+var onPinEnterKeydown = function(evt){
+  if (evt.keyCode === ENTER_KEY_CODE) {
+    onPinMousedown();
+  }
+};
+
+
+mainPin.addEventListener('mousedown', onPinMousedown);
+mainPin.addEventListener('keydown', onPinEnterKeydown);
+
+
 
 var renderPin = function (obj) {
   var template = document.querySelector('#pin');
