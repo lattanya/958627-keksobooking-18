@@ -304,14 +304,29 @@ var toggleForm = function(isDisabled){
 
 toggleForm(true);
 
-// обработчик события
+//функция позиции пина
+var PIN_WIDTH = 65;
+var PIN_HEIGHT = 87;
 
 var mainPin = map.querySelector('.map__pin--main');
+var findPinPosition = function(){
+  var coordX = Math.round(mainPin.offsetLeft + PIN_WIDTH / 2);
+  var coordY = Math.round(mainPin.offsetTop + PIN_HEIGHT);
+  var addressInput = form.querySelector('#address');
+  addressInput.value = coordX + ', ' + coordY;
+}
+
+
+// обработчик события
+
+
 var ENTER_KEY_CODE = 13;
+
 
 var onPinMousedown = function(){
   map.classList.remove('map--faded');
   toggleForm(false);
+  findPinPosition();
 };
 
 var onPinEnterKeydown = function(evt){
@@ -418,5 +433,75 @@ var generateCards = function (data) {
 var data = getData();
 generatePins(data);
 generateCards(data);
+
+//валидация формы
+
+var HouseCapacity = {
+  ONE_GUEST: 1,
+  TWO_GUESTS: 2,
+  THREE_GUESTS: 3,
+  NO_GUESTS: 0,
+};
+
+var RoomsAmount = {
+  ONE_ROOM: 1,
+  TWO_ROOMS: 2,
+  THREE_ROOMS: 3,
+  HUNDRED_ROOMS: 100,
+}
+
+var RoomsCapacity = {
+  [RoomsAmount.ONE_ROOM]: {
+    allowedGuests: [HouseCapacity.ONE_GUEST],
+    default: HouseCapacity.ONE_GUEST,
+  },
+
+  [RoomsAmount.TWO_ROOMS]: {
+    allowedGuests: [HouseCapacity.ONE_GUEST, HouseCapacity.TWO_GUESTS],
+    default: HouseCapacity.TWO_GUESTS,
+  },
+
+  [RoomsAmount.THREE_ROOMS]: {
+    allowedGuests: [HouseCapacity.ONE_GUEST, HouseCapacity.TWO_GUESTS, HouseCapacity.THREE_GUESTS],
+    default: HouseCapacity.THREE_GUESTS,
+  },
+
+  [RoomsAmount.HUNDRED_ROOMS]: {
+    allowedGuests: [HouseCapacity.NO_GUESTS],
+    default: HouseCapacity.NO_GUESTS,
+  },
+};
+
+var selectCapacity = form.querySelector('#capacity');
+
+var selectRooms = form.querySelector('#room_number');
+
+var validateCapacity = function() {
+  var capacityValue = selectCapacity.value;
+  var roomsValue = selectRooms.value;
+
+console.log(capacityValue);
+
+  var selectedRoomsData = RoomsCapacity[roomsValue];
+  var currentAllowedGuests = selectedRoomsData.allowedGuests;
+
+  var isValid =  currentAllowedGuests.some(function(el){
+    return el === parseInt(capacityValue, 10);
+  });
+
+  var textValidation = isValid ? '' : 'неверное количество гостей';
+
+    selectCapacity.setCustomValidity(textValidation);
+
+    selectCapacity.reportValidity();
+}
+
+selectCapacity.addEventListener('change', validateCapacity);
+
+//функция синхронизации комнат и гостей функция которая наобработчике события
+// чендж для селекта румс при изменении селекта
+// румс должно изменятьсязначение селекта капасити если оно не правильное используется поле дефолт
+
+
 
 
