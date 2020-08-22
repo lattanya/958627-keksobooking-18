@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  // константы
+  var MIN_Y_COORD = 130;
+  var MAX_Y_COORD = 630;
+
   var map = document.querySelector('.map');
   var filtersContainer = map.querySelector('.map__filters-container');
   var form = document.querySelector('.ad-form');
@@ -23,8 +27,7 @@
     map.insertBefore(fragmentForCards, filtersContainer);
   };
 
-  var data = window.getData();
-  generateCardsAndPins(data);
+  window.loadData(generateCardsAndPins);
 
   var toggleForm = function (isDisabled) {
     var fieldsets = form.querySelectorAll('fieldset');
@@ -37,6 +40,12 @@
         var input = inputs[k];
         input.disabled = isDisabled;
       }
+    }
+
+    if (isDisabled) {
+      form.classList.add('ad-form--disabled');
+    } else {
+      form.classList.remove('ad-form--disabled');
     }
   };
 
@@ -58,6 +67,38 @@
     map.classList.remove('map--faded');
     toggleForm(false);
     findPinPosition();
+
+    var onMainPinMousemove = function (evt) {
+      var pageWidth = document.querySelector('html').clientWidth;
+      var mapWidth = map.clientWidth;
+      var mapOffset = (pageWidth - mapWidth) / 2;
+      var maxXCoord = mapWidth + mapOffset;
+
+      mainPin.style.left = evt.pageX - mapOffset + 'px';
+      mainPin.style.top = evt.pageY + 'px';
+
+      if (evt.pageY < MIN_Y_COORD) {
+        mainPin.style.top = MIN_Y_COORD + 'px';
+      } else if (evt.pageY > MAX_Y_COORD) {
+        mainPin.style.top = MAX_Y_COORD + 'px';
+      }
+
+      if (evt.pageX < mapOffset) {
+        mainPin.style.left = '0';
+      } else if (evt.pageX > maxXCoord) {
+        mainPin.style.left = mapWidth - window.PinSizes.WIDTH + 'px';
+      }
+
+    };
+
+    var onMainPinMouseup = function () {
+      findPinPosition();
+      document.removeEventListener('mouseup', onMainPinMouseup);
+      document.removeEventListener('mousemove', onMainPinMousemove);
+    };
+
+    document.addEventListener('mousemove', onMainPinMousemove);
+    document.addEventListener('mouseup', onMainPinMouseup);
   };
 
   var onMainPinEnterKeydown = function (evt) {
