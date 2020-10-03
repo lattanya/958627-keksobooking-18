@@ -27,7 +27,11 @@
     map.insertBefore(fragmentForCards, filtersContainer);
   };
 
-  window.loadData(generateCardsAndPins);
+  var data = window.getData();
+  // generateCardsAndPins(data);
+
+
+  // window.loadData(generateCardsAndPins, window.showErrorMessage);
 
   var toggleForm = function (isDisabled) {
     var fieldsets = form.querySelectorAll('fieldset');
@@ -67,6 +71,7 @@
     map.classList.remove('map--faded');
     toggleForm(false);
     findPinPosition();
+    generateCardsAndPins(data);
 
     var onMainPinMousemove = function (evt) {
       var pageWidth = document.querySelector('html').clientWidth;
@@ -110,9 +115,28 @@
   mainPin.addEventListener('mousedown', onMainPinMousedown);
   mainPin.addEventListener('keydown', onMainPinEnterKeydown);
 
+  // фильтр по полю тип жилья
+
+  var mapFiltersForm = map.querySelector('.map__filters');
+  var filterHouseType = mapFiltersForm.querySelector('#housing-type');
+
+  var onFilterHouseTypeChange = function (evt) {
+    var currentFilterValue = evt.target.value;
+    var filterDataByHouseType = data.filter(function (dataItem) {
+      return dataItem.offer.type === currentFilterValue;
+    });
+
+    window.clearMap();
+    generateCardsAndPins(filterDataByHouseType);
+  };
+
+  filterHouseType.addEventListener('change', onFilterHouseTypeChange);
+
+
   // экспорт
 
   window.form = form;
   window.map = map;
+  window.toggleForm = toggleForm;
 
 })();

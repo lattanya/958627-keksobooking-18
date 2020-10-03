@@ -60,6 +60,35 @@
     "palace": 10000,
   };
 
+  var findElementCenter = function (element) {
+    var elementWidth = element.clientWidth;
+    var elementHeight = element.clientHeight;
+    var elementCenter = {
+      x: elementWidth / 2,
+      y: elementHeight / 2,
+    };
+    return elementCenter;
+  };
+
+
+      // переписать на методы массивов
+  var clearMap = function () {
+    var allPins = window.map.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    for (var i = 0; i < allPins.length; i++) {
+      var pin = allPins[i];
+      pin.remove();
+    }
+
+
+    var activeCard = window.map.querySelectorAll('.popup');
+    if (activeCard) {
+      activeCard.remove();
+    }
+  };
+
+
+
    // экспорт
    window.KeyCodes = KeyCodes;
    window.PinSizes = PinSizes;
@@ -68,6 +97,7 @@
    window.RoomsAmount = RoomsAmount;
    window.RoomsCapacity = RoomsCapacity;
    window.MinHouseTypePrices = MinHouseTypePrices;
+   window.clearMap = clearMap;
 
 })();
 

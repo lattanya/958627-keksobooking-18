@@ -94,6 +94,24 @@
   selectTimeIn.addEventListener('change', syncTime);
   selectTimeOut.addEventListener('change', syncTime);
 
+  var onFormSubmit = function () {
+    window.form.reset();
+    window.clearMap();
+    window.toggleForm(true);
+    window.map.classList.add('map--faded');
+
+ // сделать третий шаг задания
+
+  };
+
+
+  window.form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var forsmData = new FormData(window.form);
+    // window.sendData(formData, onFormSubmit, window.showErrorMessage);
+    onFormSubmit();
+  });
+
   // экспорт
 
 })();
