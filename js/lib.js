@@ -2,6 +2,51 @@
 
 (function () {
 
+  // написать словари для каждого фильтра, и заменить условие фильтра, если
+  var DEBOUNCE_TIMEOUT = 500;
+
+  var FilterHouseTypes = {
+    any: 'any',
+    palace: 'palace',
+    flat: 'flat',
+    house: 'house',
+    bungalo: 'bungalo',
+  };
+
+  var FilterHousePrice = {
+    any: 'any',
+    middle: 'middle',
+    low: 'low',
+    high: 'high',
+  };
+
+  var FilterHouseRooms = {
+    any: 'any',
+    one: '1',
+    two: '2',
+    three: '3',
+  };
+
+  var FilterHouseGuests = {
+    any: 'any',
+    two: '2',
+    one: '1',
+    zero: '0',
+  };
+
+  var FilterHouseFeatures = {
+    wifi: 'wifi',
+    dishwasher: 'dishwasher',
+    parking: 'parking',
+    washer: 'washer',
+    elevator: 'elevator',
+    conditioner: 'conditioner',
+    };
+
+
+
+
+
   var KeyCodes = {
     ENTER: 13,
     ESC: 27,
@@ -75,16 +120,26 @@
   var clearMap = function () {
     var allPins = window.map.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-    for (var i = 0; i < allPins.length; i++) {
-      var pin = allPins[i];
+    allPins.forEach(function (pin) {
       pin.remove();
-    }
+    });
 
-
-    var activeCard = window.map.querySelectorAll('.popup');
-    if (activeCard) {
-      activeCard.remove();
+    var allCards = window.map.querySelectorAll('.popup');
+    if (allCards) {
+      allCards.forEach(function (card) {
+        card.remove();
+      });
     }
+  };
+
+  var debounce = function (cb) {
+    var timeout;
+    return function () {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(cb, DEBOUNCE_TIMEOUT)
+    };
   };
 
 
@@ -92,13 +147,22 @@
    // экспорт
    window.KeyCodes = KeyCodes;
    window.PinSizes = PinSizes;
+
    window.HouseTypes = HouseTypes;
    window.HouseCapacity = HouseCapacity;
    window.RoomsAmount = RoomsAmount;
    window.RoomsCapacity = RoomsCapacity;
    window.MinHouseTypePrices = MinHouseTypePrices;
-   window.clearMap = clearMap;
 
+   window.clearMap = clearMap;
+   window.findElementCenter = findElementCenter;
+   window.debounce = debounce;
+
+   window.FilterHouseTypes = FilterHouseTypes;
+   window.FilterHousePrice = FilterHousePrice;
+   window.FilterHouseRooms = FilterHouseRooms;
+   window.FilterHouseGuests = FilterHouseGuests;
+   window.FilterHouseFeatures = FilterHouseFeatures;
 })();
 
 

@@ -94,11 +94,21 @@
   selectTimeIn.addEventListener('change', syncTime);
   selectTimeOut.addEventListener('change', syncTime);
 
+  var moveMainPinToCenter = function () {
+    var mapCenter = window.findElementCenter(window.map);
+    var mainPinWidth = window.mainPin.offsetWidth;
+    var mainPinHeight = window.mainPin.offsetHeight;
+    window.mainPin.style.left = mapCenter.x + mainPinWidth / 2 + 'px';
+    window.mainPin.style.top = mapCenter.y + mainPinHeight / 2 + 'px';
+  };
+
   var onFormSubmit = function () {
     window.form.reset();
     window.clearMap();
     window.toggleForm(true);
     window.map.classList.add('map--faded');
+    moveMainPinToCenter();
+
 
  // сделать третий шаг задания
 

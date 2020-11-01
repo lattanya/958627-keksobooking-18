@@ -4,6 +4,7 @@
   // константы
   var MIN_Y_COORD = 130;
   var MAX_Y_COORD = 630;
+  var MAX_PINS_AMMOUNT = 5;
 
   var map = document.querySelector('.map');
   var filtersContainer = map.querySelector('.map__filters-container');
@@ -13,8 +14,10 @@
     var fragment = document.createDocumentFragment();
     var fragmentForCards = document.createDocumentFragment();
 
-    for (var i = 0; i < data.length; i++) {
-      var obj = data[i];
+    var partialData = data.slice(0, MAX_PINS_AMMOUNT);
+
+    for (var i = 0; i < partialData.length; i++) {
+      var obj = partialData[i];
       var pin = window.renderPin(obj);
       var card = window.renderCard(obj);
       fragment.appendChild(pin);
@@ -115,28 +118,16 @@
   mainPin.addEventListener('mousedown', onMainPinMousedown);
   mainPin.addEventListener('keydown', onMainPinEnterKeydown);
 
-  // фильтр по полю тип жилья
 
-  var mapFiltersForm = map.querySelector('.map__filters');
-  var filterHouseType = mapFiltersForm.querySelector('#housing-type');
-
-  var onFilterHouseTypeChange = function (evt) {
-    var currentFilterValue = evt.target.value;
-    var filterDataByHouseType = data.filter(function (dataItem) {
-      return dataItem.offer.type === currentFilterValue;
-    });
-
-    window.clearMap();
-    generateCardsAndPins(filterDataByHouseType);
-  };
-
-  filterHouseType.addEventListener('change', onFilterHouseTypeChange);
 
 
   // экспорт
 
   window.form = form;
   window.map = map;
+  window.data = data;
+  window.generateCardsAndPins = generateCardsAndPins;
   window.toggleForm = toggleForm;
+  window.mainPin = mainPin;
 
 })();

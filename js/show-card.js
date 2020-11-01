@@ -20,7 +20,7 @@
     pin.addEventListener('click', onPinClick);
 
     var onPinEnterKeydown = function (evt) {
-      if (evt.keyCode === window.KeyCode.ENTER) {
+      if (evt.keyCode === window.KeyCodes.ENTER) {
         onPinClick();
       }
     };
@@ -43,7 +43,7 @@
   };
 
   var onCardEscKeydown = function (evt) {
-    if (evt.keyCode === window.KeyCode.ESC) {
+    if (evt.keyCode === window.KeyCodes.ESC) {
       var visibleCard = window.map.querySelector('.map__card:not(.hidden)');
 
       if (visibleCard !== null) {
